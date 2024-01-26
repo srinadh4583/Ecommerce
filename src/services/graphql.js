@@ -56,6 +56,25 @@ const GET_ORDER_HISTORY = gql`
     }
   }
 `;
+const GET_USER=gql`
+query GetUser($userName:String!,$password:String!){
+  getUser(userName:$userName,password:$password){
+      userName
+      userId
+      password
+      cartItems{
+          product{
+              productId
+              productName
+              productImage
+              description
+              price
+          }
+          quantity
+      }
+  }
+}
+`;
 
 const ADD_PRODUCT = gql`
   mutation AddProduct($product: ProductInput!) {
@@ -102,32 +121,24 @@ const PLACE_ORDER = gql`
   }
 `;
 
-// const ADD_User=gql`
-// mutation{
-//   addUser(user:{
-//       userName:"gopi"
-//       password:"gopi@683"
-//   }){
-//       userName
-//   }
-// }
-//`;
+
 const ADD_USER = gql`
   mutation AddUser($userName: String!, $password: String!) {
     addUser(user: { userName: $userName, password: $password }) {
       userName
-      # Include any other fields you want to retrieve after adding the user
     }
   }
 `;
+
 
 export {
   GET_PRODUCT,
   GET_ALL_PRODUCTS,
   GET_CART_ITEMS,
   GET_ORDER_HISTORY,
+  GET_USER,
   ADD_PRODUCT,
   ADD_TO_CART,
   PLACE_ORDER,
-  ADD_USER
+  ADD_USER,
 };

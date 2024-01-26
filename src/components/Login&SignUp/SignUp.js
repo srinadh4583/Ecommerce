@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../../services/graphql';
 import Login from './Login'; // Import your Login component
@@ -56,7 +56,7 @@ const SignUp = () => {
           </button>
           {error && <p className="error">Error: {error.message}</p>}
           <p className="signin">
-            Already have an account? <NavLink to='/login'>Sign in</NavLink>{' '}
+            Already have an account? <Link to='/login'>Log In</Link>{' '}
           </p>
         </form>
       )}
