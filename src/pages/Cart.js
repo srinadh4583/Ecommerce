@@ -141,7 +141,18 @@ const Cart = () => {
   };
 
   const calculateTotalPrice = () => {
-    return cart.reduce((total, product) => total + product.price, 0);
+    return cart.reduce((total, product) => {
+      // Ensure product.price is a valid number before adding to the total
+      const productPrice = parseFloat(product.product.price);
+      // Check if productPrice is a valid number
+      if (!isNaN(productPrice)) {
+        return total + productPrice;
+      } else {
+        // Handle invalid prices by ignoring them or logging an error
+        console.error(`Invalid price found for product: ${product.product.productName}`);
+        return total;
+      }
+    }, 0);
   };
 
   return (
