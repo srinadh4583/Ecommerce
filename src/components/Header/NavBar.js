@@ -32,7 +32,7 @@ const NavBar = () => {
   return (
     <NavigationContainer>
       <NavigationItem>
-        <NavigationLink to="/"  className={({ isActive }) => isActive? "active": ''}>
+        <NavigationLink to="/home"  className={({ isActive }) => isActive? "active": ''}>
           Home
         </NavigationLink>
       </NavigationItem>

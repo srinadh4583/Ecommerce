@@ -102,6 +102,25 @@ const PLACE_ORDER = gql`
   }
 `;
 
+// const ADD_User=gql`
+// mutation{
+//   addUser(user:{
+//       userName:"gopi"
+//       password:"gopi@683"
+//   }){
+//       userName
+//   }
+// }
+//`;
+const ADD_USER = gql`
+  mutation AddUser($userName: String!, $password: String!) {
+    addUser(user: { userName: $userName, password: $password }) {
+      userName
+      # Include any other fields you want to retrieve after adding the user
+    }
+  }
+`;
+
 export {
   GET_PRODUCT,
   GET_ALL_PRODUCTS,
@@ -110,4 +129,5 @@ export {
   ADD_PRODUCT,
   ADD_TO_CART,
   PLACE_ORDER,
+  ADD_USER
 };

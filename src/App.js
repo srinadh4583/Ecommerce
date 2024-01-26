@@ -1,6 +1,6 @@
 // App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -12,6 +12,8 @@ import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { CartProvider } from './components/context/CartContext';
 import Checkout from './components/order/OrderProcess';
 import './App.css';
+import SignUp from './components/Login&SignUp/SignUp';
+import Login from './components/Login&SignUp/Login';
 
 // Create the Apollo Client instance
 const client = new ApolloClient({
@@ -20,22 +22,35 @@ const client = new ApolloClient({
 });
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <ApolloProvider client={client}>
       <CartProvider>
-      <Router>
-        <div className="app">
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/contact" element={<ContactUs />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path='/placeorder' element={<Checkout/>}/>
-          </Routes>
-        </div>
-      </Router>
+        <Router>
+          <div className="app">
+            {isLoggedIn && <Header />}
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  isLoggedIn ? (
+                    <Navigate to="/home" />
+                  ) : (
+                    <SignUp setLoggedIn={() => setIsLoggedIn(true)} />
+                  )
+                }
+              />
+              <Route path="/login" element={<Login setLoggedIn={() => setIsLoggedIn(true)} />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/placeorder" element={<Checkout />} />
+            </Routes>
+          </div>
+        </Router>
       </CartProvider>
     </ApolloProvider>
   );
