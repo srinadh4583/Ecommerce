@@ -114,11 +114,11 @@ const PlaceOrderButton = styled.button`
 
 const Cart = () => {
   const { state, dispatch } = useCart();
-  const { cart } = state;
+  const { cart,user } = state;
 
   // Define the query hook
   const { loading, error, data } = useQuery(GET_CART_ITEMS, {
-    variables: { userId: 1 }, // You may need to adjust this according to your authentication system
+    variables: { userId: user.userId }, // You may need to adjust this according to your authentication system
     fetchPolicy: 'cache-and-network', // Fetch data from cache if available, and then fetch from network for fresh data
   });
 

@@ -6,12 +6,12 @@ const OrderSummary = ({ cart, total, onPlaceOrder }) => {
     return (
       <>
         <h2>Order Summary</h2>
-        {cart.map((product) => (
-          <ProductItem key={product.productId}>
-            <ProductImage src={product.productImage} alt={product.name} />
+        {cart.map((ele) => (
+          <ProductItem key={ele.product.productId}>
+            <ProductImage src={ele.product.productImage} alt={ele.product.name} />
             <ProductDetails>
-              <ProductName>{product.productName}</ProductName>
-              <ProductPrice>${product.price}</ProductPrice>
+              <ProductName>{ele.product.productName}</ProductName>
+              <ProductPrice>${ele.product.price}</ProductPrice>
             </ProductDetails>
           </ProductItem>
         ))}

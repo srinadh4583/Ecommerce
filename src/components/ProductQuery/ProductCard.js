@@ -62,7 +62,7 @@ const ProductCard = ({ product }) => {
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = async () => {
-    const { cart } = state;
+    const { cart,user } = state;
 
     // Check if the product is already in the cart
     const isProductInCart = cart.some(item => item.product.productId === product.productId);
@@ -75,7 +75,7 @@ const ProductCard = ({ product }) => {
             cartItem: {
               productId: product.productId,
               quantity: 1,
-              userId: 1
+              userId: user.userId
             },
           },
         });

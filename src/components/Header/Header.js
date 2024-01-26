@@ -49,11 +49,11 @@ const CartQuantity = styled.span`
 
 const Header = () => {
   const { state, dispatch } = useCart();
-  const { cartQuantity } = state;
+  const { cartQuantity,user } = state;
 
   // Query to fetch cart items
   const { data } = useQuery(GET_CART_ITEMS, {
-    variables: { userId: 1 }, // You may need to adjust this according to your authentication system
+    variables: { userId: user.userId  }, // You may need to adjust this according to your authentication system
     fetchPolicy: 'cache-and-network',
   });
 

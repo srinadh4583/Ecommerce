@@ -17,12 +17,23 @@ const Login = () => {
       const user = data.getUser;
       if (user) {
         dispatch({ type: 'SET_CART', payload: { cart: user.cartItems } });
+        dispatch({ 
+          type: 'SET_USER', 
+          payload: { 
+            user: { 
+              userName: user.userName, 
+              userId: user.userId,
+              password: user.password,
+            } 
+          }
+        });
         login(); // Call the login function upon successful authentication
       } else {
         setError('Invalid username or password');
       }
     },
   });
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();

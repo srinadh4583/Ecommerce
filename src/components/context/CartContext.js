@@ -4,6 +4,11 @@ import React, { createContext, useContext, useReducer } from 'react';
 
 // Define your initial state
 const initialState = {
+  user: {
+    userName: '',
+    password: '',
+    userId: '', // Add userId here
+  },
   cart: [],
   cartQuantity: 0,
 };
@@ -29,6 +34,11 @@ const cartReducer = (state, action) => {
         ...state,
         cart: action.payload.cart,
         cartQuantity: action.payload.cart.length,
+      };
+      case 'SET_USER':
+      return {
+        ...state,
+        user: action.payload.user,
       };
     // Add more cases for other actions like removing from the cart, etc.
 
