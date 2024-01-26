@@ -7,6 +7,8 @@ import { NavLink } from 'react-router-dom';
 import CartEmptyMessage from '../components/Error/CartEmptyMessage';
 import { GET_CART_ITEMS } from '../services/graphql';
 import { useQuery } from '@apollo/client';
+import Spinner from '../components/Spinner';
+import SomeThingWentWrong from '../components/Error/SomeThingWentWrong';
 
 const CartContainer = styled.div`
   max-width: 800px;
@@ -145,8 +147,8 @@ const Cart = () => {
   return (
     <CartContainer>
       <h2>Shopping Cart</h2>
-      {loading && <p>Loading cart items...</p>}
-      {error && <p>Error fetching cart items: {error.message}</p>}
+      {loading && <Spinner/>}
+      {error && <SomeThingWentWrong/>}
       {!loading && !error && cart.length === 0 && (
         <EmptyCartMessage>
           <CartEmptyMessage />
