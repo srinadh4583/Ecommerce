@@ -1,8 +1,10 @@
 // ProductCard.js
 
-import React from 'react';
+import { React, useState } from 'react';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
+import { ADD_TO_CART } from '../../services/graphql';
+import { useMutation } from '@apollo/client';
 
 const CardContainer = styled.div`
   border: 1px solid #ddd;
@@ -54,15 +56,45 @@ const AddToCartButton = styled.button`
 `;
 
 const ProductCard = ({ product }) => {
-  const { dispatch } = useCart();
+  const { dispatch, state } = useCart();
 
-  const handleAddToCart = () => {
-    // Dispatch the ADD_TO_CART action to update the cart state
-    dispatch({
-      type: 'ADD_TO_CART',
-      payload: { product },
-    });
+  const [addToCartMutation] = useMutation(ADD_TO_CART); // Define the mutation hook
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = async () => {
+    const { cart } = state;
+
+    // Check if the product is already in the cart
+    const isProductInCart = cart.some(item => item.product.productId === product.productId);
+    if (!isProductInCart && !isAdding) {
+      setIsAdding(true); // Set isAdding to true to prevent multiple add to cart requests
+
+      try {
+        const { data } = await addToCartMutation({
+          variables: {
+            cartItem: {
+              productId: product.productId,
+              quantity: 1,
+              userId: 1
+            },
+          },
+        });
+
+        dispatch({
+          type: 'ADD_TO_CART',
+          payload: { product: data.addToCart },
+        });
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        // Handle errors if needed
+      } finally {
+        setIsAdding(false); // Reset isAdding state after the add to cart operation is completed
+      }
+    } else {
+      alert('This product is already in your cart!');
+    }
   };
+
   return (
     <CardContainer>
       <ProductImage src={product.productImage} alt={product.productName} />
@@ -73,5 +105,6 @@ const ProductCard = ({ product }) => {
     </CardContainer>
   );
 };
+
 
 export default ProductCard;

@@ -24,6 +24,12 @@ const cartReducer = (state, action) => {
         cart: updatedCart,
         cartQuantity: state.cartQuantity - 1,
       };
+      case 'SET_CART':
+      return {
+        ...state,
+        cart: action.payload.cart,
+        cartQuantity: action.payload.cart.length,
+      };
     // Add more cases for other actions like removing from the cart, etc.
 
     default:

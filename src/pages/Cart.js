@@ -1,10 +1,12 @@
 // Cart.js
-import React from 'react';
+import { useEffect,React } from 'react';
 import styled from 'styled-components';
 import { useCart } from '../components/context/CartContext';
 import { FaTrash } from 'react-icons/fa'; // Assuming you have FontAwesome icons installed
 import { NavLink } from 'react-router-dom';
 import CartEmptyMessage from '../components/Error/CartEmptyMessage';
+import { GET_CART_ITEMS } from '../services/graphql';
+import { useQuery } from '@apollo/client';
 
 const CartContainer = styled.div`
   max-width: 800px;
@@ -112,6 +114,22 @@ const Cart = () => {
   const { state, dispatch } = useCart();
   const { cart } = state;
 
+  // Define the query hook
+  const { loading, error, data } = useQuery(GET_CART_ITEMS, {
+    variables: { userId: 1 }, // You may need to adjust this according to your authentication system
+    fetchPolicy: 'cache-and-network', // Fetch data from cache if available, and then fetch from network for fresh data
+  });
+
+  // Use useEffect to update cart state when data changes
+  useEffect(() => {
+    if (data && data.getCartItems) {
+      dispatch({
+        type: 'SET_CART',
+        payload: { cart: data.getCartItems }, // Assuming your server returns the cart items
+      });
+    }
+  }, [data, dispatch]);
+
   const handleRemoveFromCart = (productId) => {
     // Dispatch the REMOVE_FROM_CART action to update the cart state
     dispatch({
@@ -119,35 +137,38 @@ const Cart = () => {
       payload: { productId },
     });
   };
+
   const calculateTotalPrice = () => {
     return cart.reduce((total, product) => total + product.price, 0);
   };
 
-
   return (
     <CartContainer>
       <h2>Shopping Cart</h2>
-      {cart.length === 0 ? (
+      {loading && <p>Loading cart items...</p>}
+      {error && <p>Error fetching cart items: {error.message}</p>}
+      {!loading && !error && cart.length === 0 && (
         <EmptyCartMessage>
-          <CartEmptyMessage/>
+          <CartEmptyMessage />
         </EmptyCartMessage>
-      ) : (
+      )}
+      {!loading && !error && cart.length > 0 && (
         <div>
           {cart.map((product) => (
-            <CartItem key={product.productId}>
-              <img src={product.productImage} alt={product.productName} />
+            <CartItem key={product.cartItemId}>
+              <img src={product.product.productImage} alt={product.product.productName} />
               <div>
-                <h3>{product.productName}</h3>
-                <p>{product.description}</p>
-                <p>${product.price}</p>
+                <h3>{product.product.productName}</h3>
+                <p>{product.product.description}</p>
+                <p>${product.product.price}</p>
               </div>
-              <span>Quantity: 1</span>
-              <FaTrash className="remove-icon" onClick={() => handleRemoveFromCart(product.productId)} />
+              <span>Quantity: {product.quantity}</span>
+              <FaTrash className="remove-icon" onClick={() => handleRemoveFromCart(product.product.productId)} />
             </CartItem>
           ))}
           <TotalPrice>Total: ${calculateTotalPrice()}</TotalPrice>
           <NavLink to='/placeorder'>
-          <PlaceOrderButton >Place Order</PlaceOrderButton>
+            <PlaceOrderButton >Place Order</PlaceOrderButton>
           </NavLink>
         </div>
       )}
@@ -156,3 +177,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

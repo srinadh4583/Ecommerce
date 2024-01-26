@@ -1,10 +1,13 @@
 // Header.js
-import React from 'react';
+import {React,useEffect} from 'react';
 import { NavLink } from 'react-router-dom';
 import { IoMdCart } from 'react-icons/io';
 import NavBar from './NavBar';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
+import { GET_CART_ITEMS } from '../../services/graphql';
+import { useQuery } from '@apollo/client';
+
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -45,8 +48,23 @@ const CartQuantity = styled.span`
 `;
 
 const Header = () => {
-  const { state } = useCart();
-const { cartQuantity } = state;
+  const { state, dispatch } = useCart();
+  const { cartQuantity } = state;
+
+  // Query to fetch cart items
+  const { data } = useQuery(GET_CART_ITEMS, {
+    variables: { userId: 1 }, // You may need to adjust this according to your authentication system
+    fetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    if (data && data.getCartItems) {
+      dispatch({
+        type: 'SET_CART',
+        payload: { cart: data.getCartItems },
+      });
+    }
+  }, [data, dispatch]);
   return (
     <HeaderContainer>
       <img src="logo.png" alt="Store Logo" />
