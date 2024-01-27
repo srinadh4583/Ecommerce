@@ -5,8 +5,8 @@ import { useCart } from '../components/context/CartContext';
 import { FaTrash } from 'react-icons/fa'; // Assuming you have FontAwesome icons installed
 import { NavLink } from 'react-router-dom';
 import CartEmptyMessage from '../components/Error/CartEmptyMessage';
-import { GET_CART_ITEMS } from '../services/graphql';
-import { useQuery } from '@apollo/client';
+import { GET_CART_ITEMS,DELETE_CART_ITEM } from '../services/graphql';
+import { useQuery,useMutation } from '@apollo/client';
 import Spinner from '../components/Spinner';
 import SomeThingWentWrong from '../components/Error/SomeThingWentWrong';
 
@@ -114,41 +114,42 @@ const PlaceOrderButton = styled.button`
 
 const Cart = () => {
   const { state, dispatch } = useCart();
-  const { cart,user } = state;
+  const { cart, user } = state;
 
-  // Define the query hook
-  const { loading, error, data } = useQuery(GET_CART_ITEMS, {
-    variables: { userId: user.userId }, // You may need to adjust this according to your authentication system
-    fetchPolicy: 'cache-and-network', // Fetch data from cache if available, and then fetch from network for fresh data
+  const { loading, error, data, refetch } = useQuery(GET_CART_ITEMS, {
+    variables: { userId: user.userId },
+    fetchPolicy: 'cache-and-network',
   });
 
-  // Use useEffect to update cart state when data changes
+  const [deleteCartItem] = useMutation(DELETE_CART_ITEM);
+
   useEffect(() => {
     if (data && data.getCartItems) {
       dispatch({
         type: 'SET_CART',
-        payload: { cart: data.getCartItems }, // Assuming your server returns the cart items
+        payload: { cart: data.getCartItems },
       });
     }
   }, [data, dispatch]);
 
-  const handleRemoveFromCart = (productId) => {
-    // Dispatch the REMOVE_FROM_CART action to update the cart state
-    dispatch({
-      type: 'REMOVE_FROM_CART',
-      payload: { productId },
-    });
+  const handleRemoveFromCart = async (cartItemId) => {
+    try {
+      await deleteCartItem({
+        variables: { cartItemId: cartItemId }
+      });
+      // Refetch cart items after successful removal
+      refetch();
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+    }
   };
 
   const calculateTotalPrice = () => {
     return cart.reduce((total, product) => {
-      // Ensure product.price is a valid number before adding to the total
       const productPrice = parseFloat(product.product.price);
-      // Check if productPrice is a valid number
       if (!isNaN(productPrice)) {
         return total + productPrice;
       } else {
-        // Handle invalid prices by ignoring them or logging an error
         console.error(`Invalid price found for product: ${product.product.productName}`);
         return total;
       }
@@ -158,8 +159,8 @@ const Cart = () => {
   return (
     <CartContainer>
       <h2>Shopping Cart</h2>
-      {loading && <Spinner/>}
-      {error && <SomeThingWentWrong/>}
+      {loading && <Spinner />}
+      {error && <SomeThingWentWrong />}
       {!loading && !error && cart.length === 0 && (
         <EmptyCartMessage>
           <CartEmptyMessage />
@@ -176,7 +177,7 @@ const Cart = () => {
                 <p>${product.product.price}</p>
               </div>
               <span>Quantity: {product.quantity}</span>
-              <FaTrash className="remove-icon" onClick={() => handleRemoveFromCart(product.product.productId)} />
+              <FaTrash className="remove-icon" onClick={() => handleRemoveFromCart(product.cartItemId)} />
             </CartItem>
           ))}
           <TotalPrice>Total: ${calculateTotalPrice()}</TotalPrice>

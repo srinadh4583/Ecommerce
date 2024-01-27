@@ -130,6 +130,25 @@ const ADD_USER = gql`
   }
 `;
 
+const DELETE_CART_ITEM=gql`
+mutation DeleteCartitem($cartItemId:ID!){
+  deleteCartItem(cartItemId:$cartItemId){
+      cartItemId
+      product{
+        productId  
+        productName
+        productImage
+        description
+        price
+      }
+      quantity
+      user{
+          userName
+      }
+  }
+}
+`;
+
 
 export {
   GET_PRODUCT,
@@ -141,4 +160,5 @@ export {
   ADD_TO_CART,
   PLACE_ORDER,
   ADD_USER,
+  DELETE_CART_ITEM,
 };
