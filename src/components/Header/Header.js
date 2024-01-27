@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
 import { GET_CART_ITEMS } from '../../services/graphql';
 import { useQuery } from '@apollo/client';
+import Logo from './Logo';
 
 
 const HeaderContainer = styled.header`
@@ -17,6 +18,7 @@ const HeaderContainer = styled.header`
   background-color: #f0f0f0;
   position:sticky;
   top:0;
+  height:30px;
 `;
 
 const CartIcon = styled(NavLink)`
@@ -67,7 +69,7 @@ const Header = () => {
   }, [data, dispatch]);
   return (
     <HeaderContainer>
-      <img src="logo.png" alt="Store Logo" />
+     <Logo/>
       <NavBar />
       <CartIcon to="/cart" className={({ isActive }) => isActive? "active": ''}>
         <IoMdCart />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../../services/graphql';
 import Login from './Login'; // Import your Login component
@@ -9,10 +9,13 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSignupSuccessful, setIsSignupSuccessful] = useState(false);
+  const navigate = useNavigate(); // Access the navigate function
 
   const [addUser, { loading, error }] = useMutation(ADD_USER, {
     onCompleted: () => {
       setIsSignupSuccessful(true);
+      // Redirect to login page after successful signup
+      navigate('/login');
     },
     onError: (error) => {
       console.error('Error signing up:', error.message);
@@ -56,7 +59,7 @@ const SignUp = () => {
           </button>
           {error && <p className="error">Error: {error.message}</p>}
           <p className="signin">
-            Already have an account? <Link to='/login'>Log In</Link>{' '}
+            Already have an account? <NavLink to='/login'>Log In</NavLink>
           </p>
         </form>
       )}

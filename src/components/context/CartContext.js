@@ -8,6 +8,7 @@ const initialState = {
     userName: '',
     password: '',
     userId: '', // Add userId here
+    addresses: [], // Add addresses array here
   },
   cart: [],
   cartQuantity: 0,
@@ -29,16 +30,19 @@ const cartReducer = (state, action) => {
         cart: updatedCart,
         cartQuantity: state.cartQuantity - 1,
       };
-      case 'SET_CART':
+    case 'SET_CART':
       return {
         ...state,
         cart: action.payload.cart,
         cartQuantity: action.payload.cart.length,
       };
-      case 'SET_USER':
+    case 'SET_USER':
       return {
         ...state,
-        user: action.payload.user,
+        user: {
+          ...state.user,
+          ...action.payload.user,
+        },
       };
     // Add more cases for other actions like removing from the cart, etc.
 

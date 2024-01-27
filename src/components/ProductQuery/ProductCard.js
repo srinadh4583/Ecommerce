@@ -36,6 +36,11 @@ const ProductDescription = styled.p`
   margin-top: 3px;
   font-size: 1rem;
   color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines to show */
+  -webkit-box-orient: vertical;
 `;
 
 const ProductPrice = styled.p`
@@ -46,6 +51,7 @@ const ProductPrice = styled.p`
 `;
 const AddToCartButton = styled.button`
   margin-top: 10px;
+  margin-left:40px;
   padding: 8px 16px;
   font-size: 1rem;
   background-color: #ff4500;

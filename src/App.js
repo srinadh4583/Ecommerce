@@ -8,11 +8,15 @@ import Cart from './pages/Cart';
 import ContactUs from './pages/Contactus';
 import { ApolloProvider } from '@apollo/client';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import Checkout from './components/order/OrderProcess';
+//import Checkout from './components/order/OrderProcess';
 import './App.css';
 import SignUp from './components/Login&SignUp/SignUp';
 import Login from './components/Login&SignUp/Login';
 import { AuthProvider, useAuth } from './components/Authentication/AuthContext';
+import ShippingAddressComponent from './components/order/shipping/ShippingAddressComponent';
+import ShippingAddressForm from './components/order/shipping/ShippingAddressForm';
+import Payment from './components/payment/Payment';
+import PaymentSuccess from './components/payment/PaymentSuccess';
 
 const client = new ApolloClient({
   uri: 'http://localhost:8080/graphql',
@@ -50,7 +54,12 @@ const AppRouter = () => {
               <Route path="/products" element={<Products />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/placeorder" element={<Checkout />} />  
+              <Route path="/placeorder" element={<ShippingAddressComponent/>} />  
+              <Route path='addaddress' element={<ShippingAddressForm/>}/>
+              <Route path="/login" element={<Login />} />
+              <Route path="/payment" element={<Payment/>} />
+              <Route path="/paymentSuccess" element={<PaymentSuccess/>} />
+
             </>
           ) : (
             <>

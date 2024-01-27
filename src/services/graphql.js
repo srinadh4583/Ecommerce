@@ -75,6 +75,17 @@ query GetUser($userName:String!,$password:String!){
   }
 }
 `;
+const GET_USER_ADDRESSES=gql`
+query GetUserAddresses($userId:ID!){
+  getUserAddresses(userId:$userId){
+      addressId
+      postalCode
+      street
+      city
+      houseNo
+  }
+}
+`;
 
 const ADD_PRODUCT = gql`
   mutation AddProduct($product: ProductInput!) {
@@ -148,7 +159,17 @@ mutation DeleteCartitem($cartItemId:ID!){
   }
 }
 `;
-
+const ADD_ADDRESS=gql`
+mutation AddAddress($userId:ID!,$address:AddressInput!){
+  addAddress(userId:$userId,address:$address){
+      addressId
+      houseNo
+      street
+      city
+      postalCode
+  }
+}
+`;
 
 export {
   GET_PRODUCT,
@@ -156,9 +177,11 @@ export {
   GET_CART_ITEMS,
   GET_ORDER_HISTORY,
   GET_USER,
+  GET_USER_ADDRESSES,
   ADD_PRODUCT,
   ADD_TO_CART,
   PLACE_ORDER,
   ADD_USER,
   DELETE_CART_ITEM,
+  ADD_ADDRESS
 };
