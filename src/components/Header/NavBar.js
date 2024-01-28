@@ -47,6 +47,11 @@ const NavBar = () => {
         </NavigationLink>
       </NavigationItem>
       <NavigationItem>
+        <NavigationLink to="/orders" className={({ isActive }) => isActive? "active": ''}>
+          Orders
+        </NavigationLink>
+      </NavigationItem>
+      <NavigationItem>
         <NavigationLink to="/contact" className={({ isActive }) => isActive? "active": ''}>
           Contact Us
         </NavigationLink>

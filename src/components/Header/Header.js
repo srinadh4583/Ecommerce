@@ -19,6 +19,7 @@ const HeaderContainer = styled.header`
   position:sticky;
   top:0;
   height:30px;
+  z-index:9999;
 `;
 
 const CartIcon = styled(NavLink)`

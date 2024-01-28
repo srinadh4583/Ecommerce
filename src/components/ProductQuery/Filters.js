@@ -1,4 +1,5 @@
 // Filters.js
+import React from 'react';
 import styled from 'styled-components';
 
 const FiltersContainer = styled.div`
@@ -8,34 +9,42 @@ const FiltersContainer = styled.div`
   border-radius: 8px;
 `;
 
-const Filters = ({ categories, selectedFilters, onFilterChange }) => {
-  const handleFilterChange = (category) => {
-    const updatedFilters = [...selectedFilters];
+const FiltersHeader = styled.h3`
+  display: flex;
+  justify-content: space-between;
+`;
 
-    if (updatedFilters.includes(category)) {
-      updatedFilters.splice(updatedFilters.indexOf(category), 1);
-    } else {
-      updatedFilters.push(category);
-    }
+const FilterOptions = styled.div`
+  display: flex;
+`;
 
-    onFilterChange(updatedFilters);
+const Dropdown = styled.select`
+  padding: 8px;
+  margin-left: 10px;
+`;
+
+const Filters = ({ categories, selectedFilter, onFilterChange }) => {
+  const handleFilterChange = (event) => {
+    const selectedCategory = event.target.value;
+    onFilterChange(selectedCategory);
   };
 
   return (
-    <FiltersContainer>
-      <h3>Filters</h3>
-      {categories.map((category) => (
-        <label key={category}>
-          <input
-            type="checkbox"
-            value={category}
-            checked={selectedFilters.includes(category)}
-            onChange={() => handleFilterChange(category)}
-          />
-          {category}
-        </label>
-      ))}
-    </FiltersContainer>
+    <div>
+      <FiltersHeader>
+        <span>Filters</span>
+        <FilterOptions>
+          <Dropdown value={selectedFilter} onChange={handleFilterChange}>
+            <option value="">All</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </Dropdown>
+        </FilterOptions>
+      </FiltersHeader>
+    </div>
   );
 };
 

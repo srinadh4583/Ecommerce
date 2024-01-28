@@ -12,6 +12,7 @@ const initialState = {
   },
   cart: [],
   cartQuantity: 0,
+  orders:[],
 };
 
 // Define your reducer function
@@ -43,6 +44,11 @@ const cartReducer = (state, action) => {
           ...state.user,
           ...action.payload.user,
         },
+      };
+      case 'SET_ORDERS':
+      return {
+        ...state,
+        orders: action.payload.orders,
       };
     // Add more cases for other actions like removing from the cart, etc.
 

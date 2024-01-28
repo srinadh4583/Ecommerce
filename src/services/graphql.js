@@ -72,6 +72,18 @@ query GetUser($userName:String!,$password:String!){
           }
           quantity
       }
+      orders{
+        orderDate
+        orderItems{
+            product{
+                productId
+            productName
+            productImage
+            description
+            price
+            }
+        }
+    }
   }
 }
 `;
@@ -170,6 +182,32 @@ mutation AddAddress($userId:ID!,$address:AddressInput!){
   }
 }
 `;
+const CREATE_ORDER=gql`
+mutation CreateOrder($userId: Int!, $productId: Int!) {
+  createOrder(order: {
+      userId: $userId
+      orderItems: {
+          productId: $productId
+      }
+  }) {
+      orderDate
+      orderId
+      orderItems {
+          product {
+              productName
+              productId
+              productImage
+              description
+              price
+          }
+      }
+      user {
+          userName
+      }
+  }
+}
+
+`;
 
 export {
   GET_PRODUCT,
@@ -183,5 +221,6 @@ export {
   PLACE_ORDER,
   ADD_USER,
   DELETE_CART_ITEM,
-  ADD_ADDRESS
+  ADD_ADDRESS,
+  CREATE_ORDER
 };

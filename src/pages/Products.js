@@ -31,7 +31,7 @@ const FiltersAndSearchContainer = styled.div`
 const categoriesData = ["shirt", "pant", "mobiles", "laptops"];
 
 const Products = () => {
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
   const { loading, error, data: productsData } = useQuery(GET_ALL_PRODUCTS);
@@ -41,7 +41,7 @@ const Products = () => {
 
   const filteredProducts = productsData.getAllProducts.filter((product) => {
     return (
-      (selectedFilters.length === 0 || selectedFilters.includes(product.category)) &&
+      (selectedFilter.length === 0 || selectedFilter.includes(product.category)) &&
       (product.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()))
     );
@@ -50,10 +50,10 @@ const Products = () => {
   return (
     <>
       <FiltersAndSearchContainer>
-        <Filters
+      <Filters
           categories={categoriesData}
-          selectedFilters={selectedFilters}
-          onFilterChange={setSelectedFilters}
+          selectedFilter={selectedFilter}
+          onFilterChange={setSelectedFilter}
         />
         <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       </FiltersAndSearchContainer>

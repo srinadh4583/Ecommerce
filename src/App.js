@@ -17,6 +17,7 @@ import ShippingAddressComponent from './components/order/shipping/ShippingAddres
 import ShippingAddressForm from './components/order/shipping/ShippingAddressForm';
 import Payment from './components/payment/Payment';
 import PaymentSuccess from './components/payment/PaymentSuccess';
+import Orders from './pages/Orders';
 
 const client = new ApolloClient({
   uri: 'http://localhost:8080/graphql',
@@ -52,6 +53,7 @@ const AppRouter = () => {
               <Route path='/home' element={<Home/>}/>
               <Route path="/about" element={<About />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/orders" element={<Orders />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/placeorder" element={<ShippingAddressComponent/>} />  

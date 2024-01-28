@@ -68,7 +68,7 @@ const AddressColumn = styled.div`
 `;
 
 const ExistingAddressesComponent = ({ userAddresses }) => {
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(userAddresses.length > 0 ? userAddresses[0].addressId : null); // Initialize with the first address's ID
   const navigate = useNavigate();
 
   const handleAddressSelect = (addressId) => {
@@ -78,44 +78,45 @@ const ExistingAddressesComponent = ({ userAddresses }) => {
   const changeLink = () => {
     navigate('/addaddress');
   };
-  const changeToPayLink=()=>{
-    navigate('/payment')
-  }
+
+  const changeToPayLink = () => {
+    navigate('/payment');
+  };
 
   return (
     <div>
       <AddressHeader>Shipping Address</AddressHeader>
-    <TopContainer className='address-center'>
-      <AddressGrid>
-        <AddressColumn>
-          {userAddresses.map((address) => (
-            <Container key={address.addressId}>
-              <AddressDetails>
-                <AddressLabel>
-                  <RadioInput
-                    type="radio"
-                    name="address"
-                    value={address.addressId}
-                    checked={selectedAddress === address.addressId}
-                    onChange={() => handleAddressSelect(address.addressId)}
-                  />
-                </AddressLabel>
-                <AddressInfo>
-                  <div>H-no: {address.houseNo}</div>
-                  <div>Street: {address.street}</div>
-                  <div>City: {address.city}</div>
-                  <div>Postal Code: {address.postalCode}</div>
-                </AddressInfo>
-              </AddressDetails>
-            </Container>
-          ))}
-        </AddressColumn>
-        <AddressColumn>
-          <AddButton onClick={changeLink}>Add Another Address</AddButton>
-          <AddButton onClick={changeToPayLink}>Procced To Payment</AddButton>
-        </AddressColumn>
-      </AddressGrid>
-    </TopContainer>
+      <TopContainer className='address-center'>
+        <AddressGrid>
+          <AddressColumn>
+            {userAddresses.map((address) => (
+              <Container key={address.addressId}>
+                <AddressDetails>
+                  <AddressLabel>
+                    <RadioInput
+                      type="radio"
+                      name="address"
+                      value={address.addressId}
+                      checked={selectedAddress === address.addressId}
+                      onChange={() => handleAddressSelect(address.addressId)}
+                    />
+                  </AddressLabel>
+                  <AddressInfo>
+                    <div>H-no: {address.houseNo}</div>
+                    <div>Street: {address.street}</div>
+                    <div>City: {address.city}</div>
+                    <div>Postal Code: {address.postalCode}</div>
+                  </AddressInfo>
+                </AddressDetails>
+              </Container>
+            ))}
+          </AddressColumn>
+          <AddressColumn>
+            <AddButton onClick={changeLink}>Add Another Address</AddButton>
+            <AddButton onClick={changeToPayLink}>Proceed To Payment</AddButton>
+          </AddressColumn>
+        </AddressGrid>
+      </TopContainer>
     </div>
   );
 };

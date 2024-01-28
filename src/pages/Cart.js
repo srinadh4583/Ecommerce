@@ -1,14 +1,15 @@
-// Cart.js
-import { useEffect,React } from 'react';
+import { useEffect, React, useState } from 'react';
 import styled from 'styled-components';
 import { useCart } from '../components/context/CartContext';
-import { FaTrash } from 'react-icons/fa'; // Assuming you have FontAwesome icons installed
 import { NavLink } from 'react-router-dom';
 import CartEmptyMessage from '../components/Error/CartEmptyMessage';
-import { GET_CART_ITEMS,DELETE_CART_ITEM } from '../services/graphql';
-import { useQuery,useMutation } from '@apollo/client';
+import { GET_CART_ITEMS, DELETE_CART_ITEM } from '../services/graphql';
+import { useQuery, useMutation } from '@apollo/client';
 import Spinner from '../components/Spinner';
 import SomeThingWentWrong from '../components/Error/SomeThingWentWrong';
+import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
+
+
 
 const CartContainer = styled.div`
   max-width: 800px;
@@ -112,7 +113,33 @@ const PlaceOrderButton = styled.button`
   }
 `;
 
+const QuantityContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const LeftButton = styled.button`
+  background-color: #ddd;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  position:relative;
+  left:140px;
+`;
+const QuantityButton = styled.button`
+  background-color: #ddd;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+`;
+
+const QuantityText = styled.span`
+  margin-right:10px;
+  font-size: 1rem;
+  font-weight: bold;
+`;
+
 const Cart = () => {
+  const [selectedProducts, setSelectedProducts] = useState([]); // State for selected products
   const { state, dispatch } = useCart();
   const { cart, user } = state;
 
@@ -144,16 +171,54 @@ const Cart = () => {
     }
   };
 
-  const calculateTotalPrice = () => {
-    return cart.reduce((total, product) => {
-      const productPrice = parseFloat(product.product.price);
-      if (!isNaN(productPrice)) {
-        return total + productPrice;
-      } else {
-        console.error(`Invalid price found for product: ${product.product.productName}`);
-        return total;
+  // const calculateTotalPrice = () => {
+  //   return cart.reduce((total, product) => {
+  //     const productPrice = parseFloat(product.product.price);
+  //     if (!isNaN(productPrice)) {
+  //       return total + productPrice;
+  //     } else {
+  //       console.error(`Invalid price found for product: ${product.product.productName}`);
+  //       return total;
+  //     }
+  //   }, 0);
+  // };
+
+  const handleIncreaseQuantity = (product) => {
+    const updatedCart = cart.map((item) => {
+      if (item.cartItemId === product.cartItemId) {
+        return { ...item, quantity: item.quantity + 1 };
       }
-    }, 0);
+      return item;
+    });
+    dispatch({
+      type: 'SET_CART',
+      payload: { cart: updatedCart },
+    });
+  };
+
+  const handleDecreaseQuantity = (product) => {
+    if (product.quantity > 1) {
+      const updatedCart = cart.map((item) => {
+        if (item.cartItemId === product.cartItemId) {
+          return { ...item, quantity: item.quantity - 1 };
+        }
+        return item;
+      });
+      dispatch({
+        type: 'SET_CART',
+        payload: { cart: updatedCart },
+      });
+    }
+  };
+
+  const handleProductSelect = (productId) => {
+    setSelectedProducts(prevSelected => {
+      if (prevSelected.includes(productId)) {
+        return prevSelected.filter(id => id !== productId);
+      } else {
+        return [...prevSelected, productId];
+      }
+    });
   };
 
   return (
@@ -170,17 +235,35 @@ const Cart = () => {
         <div>
           {cart.map((product) => (
             <CartItem key={product.cartItemId}>
+              <input
+                type="checkbox"
+                checked={selectedProducts.includes(product.cartItemId)}
+                onChange={() => handleProductSelect(product.cartItemId)}
+              />
               <img src={product.product.productImage} alt={product.product.productName} />
               <div>
                 <h3>{product.product.productName}</h3>
-                <p>{product.product.description}</p>
-                <p>${product.product.price}</p>
+                <p>₹{product.product.price}</p>
               </div>
-              <span>Quantity: {product.quantity}</span>
+              <QuantityContainer>
+                <LeftButton onClick={() => handleDecreaseQuantity(product)}> <FaMinus /> </LeftButton>
+                <QuantityText>Quantity: {product.quantity}</QuantityText>
+                <QuantityButton onClick={() => handleIncreaseQuantity(product)}> <FaPlus /> </QuantityButton>
+              </QuantityContainer>
               <FaTrash className="remove-icon" onClick={() => handleRemoveFromCart(product.cartItemId)} />
             </CartItem>
           ))}
-          <TotalPrice>Total: ${calculateTotalPrice()}</TotalPrice>
+          {/* <TotalPrice>Total: ₹{calculateTotalPrice()}.00/-</TotalPrice> */}
+          {selectedProducts.length > 0 && (
+            <TotalPrice>
+              Selected Items Total: ₹
+              {cart
+                .filter(product => selectedProducts.includes(product.cartItemId))
+                .reduce((total, product) => total + parseFloat(product.product.price) * product.quantity, 0)
+                .toFixed(2)}
+              /-
+            </TotalPrice>
+          )}
           <NavLink to='/placeorder'>
             <PlaceOrderButton >Place Order</PlaceOrderButton>
           </NavLink>
@@ -191,4 +274,3 @@ const Cart = () => {
 };
 
 export default Cart;
-

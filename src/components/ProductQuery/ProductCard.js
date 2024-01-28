@@ -106,7 +106,7 @@ const ProductCard = ({ product }) => {
       <ProductImage src={product.productImage} alt={product.productName} />
       <ProductName>{product.productName}</ProductName>
       <ProductDescription>{product.description}</ProductDescription>
-      <ProductPrice>${product.price}</ProductPrice>
+      <ProductPrice>₹{product.price}/-</ProductPrice>
       <AddToCartButton onClick={handleAddToCart}>Add to Cart</AddToCartButton>
     </CardContainer>
   );
