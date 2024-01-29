@@ -36,12 +36,14 @@ const Products = () => {
   const uniqueCategories = new Set(categoriesData);
 
   const { loading, error, data: productsData } = useQuery(GET_ALL_PRODUCTS);
+ if(productsData){
   productsData.getAllProducts.map(ele=>{
     if (!uniqueCategories.has(ele.category)) {
       uniqueCategories.add(ele.category);
       categoriesData.push(ele.category);
   }
   })
+ }
   if (loading) return <Spinner/>;
   if (error) return <SomeThingWentWrong/>;
 
