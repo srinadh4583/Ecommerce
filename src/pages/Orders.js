@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { useCart } from '../components/context/CartContext';
+import { GET_ORDER_HISTORY } from '../services/graphql';
+import { useQuery } from '@apollo/client';
 
 const OrdersContainer = styled.div`
   padding: 20px;
@@ -53,11 +55,36 @@ const ProductPrice = styled.div`
 `;
 
 const Orders = () => {
-    const{state,dispatch}=useCart();
-const orders=state.orders
+  const { state } = useCart();
+  const { user } = state;
+  const [orders, setOrders] = useState([]);
+
+  const { data, refetch } = useQuery(GET_ORDER_HISTORY, {
+    variables: { userId: user.userId },
+    skip: !user.userId, // Skip the query if userId is not available
+  });
+
+  useEffect(() => {
+    if (data) {
+      setOrders(data.getOrderHistory);
+    }
+  }, [data]);
+
+  // Use a state variable to trigger refetch
+  const [triggerRefetch, setTriggerRefetch] = useState(false);
+
+  // When user changes or triggerRefetch changes, refetch data
+  useEffect(() => {
+    if (user.userId || triggerRefetch) {
+      refetch();
+      // Reset triggerRefetch after refetch
+      setTriggerRefetch(false);
+    }
+  }, [user.userId, triggerRefetch, refetch]);
+
   return (
     <OrdersContainer>
-      {orders.map((order, index) => (
+      {orders && orders.map((order, index) => (
         <OrderCard key={index}>
           <OrderDate>
             <FaCalendarAlt style={{ marginRight: '5px' }} />

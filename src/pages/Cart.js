@@ -8,6 +8,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import Spinner from '../components/Spinner';
 import SomeThingWentWrong from '../components/Error/SomeThingWentWrong';
 import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
+import { useOrder } from '../components/context/OrderContext';
 
 
 
@@ -140,8 +141,10 @@ const QuantityText = styled.span`
 
 const Cart = () => {
   const [selectedProducts, setSelectedProducts] = useState([]); // State for selected products
+  const [selectedData, setSelectedData] = useState([]);
   const { state, dispatch } = useCart();
   const { cart, user } = state;
+  const { dispatch: orderDispatch } = useOrder();
 
   const { loading, error, data, refetch } = useQuery(GET_CART_ITEMS, {
     variables: { userId: user.userId },
@@ -171,17 +174,7 @@ const Cart = () => {
     }
   };
 
-  // const calculateTotalPrice = () => {
-  //   return cart.reduce((total, product) => {
-  //     const productPrice = parseFloat(product.product.price);
-  //     if (!isNaN(productPrice)) {
-  //       return total + productPrice;
-  //     } else {
-  //       console.error(`Invalid price found for product: ${product.product.productName}`);
-  //       return total;
-  //     }
-  //   }, 0);
-  // };
+
 
   const handleIncreaseQuantity = (product) => {
     const updatedCart = cart.map((item) => {
@@ -211,15 +204,32 @@ const Cart = () => {
     }
   };
 
-  const handleProductSelect = (productId) => {
+  const handleProductSelect = (productId, productData) => {
     setSelectedProducts(prevSelected => {
       if (prevSelected.includes(productId)) {
+        setSelectedData(prevData => prevData.filter(ele => ele.productId !== productData.product.productId));
         return prevSelected.filter(id => id !== productId);
       } else {
+        setSelectedData(prevData => [...prevData, productData.product]);
         return [...prevSelected, productId];
       }
     });
   };
+  let selectedItems = [];
+  if (selectedData) {
+    selectedData.map(ele => {
+      if (!selectedItems.includes(ele)) {
+        selectedItems.push(ele);
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (selectedData && selectedData.length > 0) {
+      orderDispatch({ type: 'SELECT_PRODUCT', payload: { product: selectedItems } });
+    }
+  }, [selectedData, orderDispatch]);
+
 
   return (
     <CartContainer>
@@ -238,7 +248,7 @@ const Cart = () => {
               <input
                 type="checkbox"
                 checked={selectedProducts.includes(product.cartItemId)}
-                onChange={() => handleProductSelect(product.cartItemId)}
+                onChange={() => handleProductSelect(product.cartItemId, product)}
               />
               <img src={product.product.productImage} alt={product.product.productName} />
               <div>

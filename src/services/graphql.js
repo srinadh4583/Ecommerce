@@ -52,10 +52,15 @@ const GET_ORDER_HISTORY = gql`
     getOrderHistory(userId: $userId) {
       orderId
       orderDate
-      user {
-        userName
-        userId
-      }
+      orderItems{
+        product{
+            productName
+            productId
+            productImage
+            description
+            price
+        }
+    }
     }
   }
 `;

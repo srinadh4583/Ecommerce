@@ -2,12 +2,53 @@ import React from 'react';
 import { FaPaypal, FaApplePay, FaGooglePay } from 'react-icons/fa'; 
 import '../../App.css'
 import {  useNavigate } from 'react-router-dom';
+import { useOrder } from '../context/OrderContext';
+import { useMutation } from '@apollo/client';
+import { CREATE_ORDER } from '../../services/graphql';
+import { useCart } from '../context/CartContext';
 
 function Payment() {
+  const {state:cartState}=useCart()
+  const{user}=cartState
+  const {state}=useOrder();
+   const {selectedProducts}=state
+   //console.log(selectedProducts);
     const navigate=useNavigate();
-const handleSubmit=()=>{
-    navigate("/paymentSuccess")
-}
+    const [createOrderMutation] = useMutation(CREATE_ORDER);
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      
+      // Call the mutation function with the necessary variables
+      try {
+        
+        selectedProducts.forEach(async (ele) => {
+          let productId;
+          ele.map(ele1=>{
+            productId=ele1.productId;
+          })
+          if(productId&&user.userId){
+            
+          try {
+            const { data } = await createOrderMutation({
+              variables: {
+                userId: user.userId, // Assuming user is defined and has userId
+                productId: productId
+              }
+            });
+            
+          } catch (error) {
+            console.error(`Error creating order for product ${ele}:`, error);
+            // Handle error accordingly
+          }
+          }
+        });
+        navigate("/paymentSuccess");
+      } catch (error) {
+        console.error('Error creating order:', error);
+        // Handle error accordingly
+      }
+    }
   return (
     <div className="modal">
       <form className="form" onSubmit={handleSubmit}>

@@ -1,5 +1,5 @@
-// Assuming your CartContext looks something like this
 // CartContext.js
+
 import React, { createContext, useContext, useReducer } from 'react';
 
 // Define your initial state
@@ -12,7 +12,7 @@ const initialState = {
   },
   cart: [],
   cartQuantity: 0,
-  orders:[],
+  orders: [],
 };
 
 // Define your reducer function
@@ -25,7 +25,9 @@ const cartReducer = (state, action) => {
         cartQuantity: state.cartQuantity + 1,
       };
     case 'REMOVE_FROM_CART':
-      const updatedCart = state.cart.filter(product => product.productId !== action.payload.productId);
+      const updatedCart = state.cart.filter(
+        (product) => product.productId !== action.payload.productId
+      );
       return {
         ...state,
         cart: updatedCart,
@@ -45,13 +47,17 @@ const cartReducer = (state, action) => {
           ...action.payload.user,
         },
       };
-      case 'SET_ORDERS':
+    case 'SET_ORDERS':
       return {
         ...state,
         orders: action.payload.orders,
       };
+    case 'REMOVE_SELECTED_PRODUCTS_FROM_CART':
+      return {
+        ...state,
+        cartQuantity: state.cart.length,
+      };
     // Add more cases for other actions like removing from the cart, etc.
-
     default:
       return state;
   }
