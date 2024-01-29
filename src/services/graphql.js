@@ -8,6 +8,7 @@ const GET_PRODUCT = gql`
       price
       description
       productImage
+      category
     }
   }
 `;
@@ -20,6 +21,7 @@ const GET_ALL_PRODUCTS = gql`
       price
       description
       productImage
+      category
     }
   }
 `;
@@ -34,6 +36,7 @@ const GET_CART_ITEMS = gql`
         price
         description
         productImage
+        category
       }
       quantity
       user {
@@ -69,6 +72,7 @@ query GetUser($userName:String!,$password:String!){
               productImage
               description
               price
+              category
           }
           quantity
       }
@@ -76,11 +80,12 @@ query GetUser($userName:String!,$password:String!){
         orderDate
         orderItems{
             product{
-                productId
+            productId
             productName
             productImage
             description
             price
+            category
             }
         }
     }
@@ -107,6 +112,7 @@ const ADD_PRODUCT = gql`
       price
       description
       productImage
+      category
     }
   }
 `;
@@ -121,6 +127,7 @@ const ADD_TO_CART = gql`
         price
         description
         productImage
+        category
       }
       quantity
       user {
@@ -163,6 +170,7 @@ mutation DeleteCartitem($cartItemId:ID!){
         productImage
         description
         price
+        category
       }
       quantity
       user{
@@ -199,6 +207,7 @@ mutation CreateOrder($userId: Int!, $productId: Int!) {
               productImage
               description
               price
+              category
           }
       }
       user {

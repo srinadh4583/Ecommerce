@@ -15,7 +15,6 @@ const Login = () => {
   const [getUser, { loading }] = useLazyQuery(GET_USER, {
     onCompleted: (data) => {
       const user = data.getUser;
-      console.log(user);
       if (user) {
         dispatch({ type: 'SET_CART', payload: { cart: user.cartItems } });
         dispatch({ 

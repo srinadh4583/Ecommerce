@@ -28,14 +28,20 @@ const FiltersAndSearchContainer = styled.div`
   }
 `;
 
-const categoriesData = ["shirt", "pant", "mobiles", "laptops"];
+const categoriesData = [];
 
 const Products = () => {
   const [selectedFilter, setSelectedFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const uniqueCategories = new Set(categoriesData);
 
   const { loading, error, data: productsData } = useQuery(GET_ALL_PRODUCTS);
-
+  productsData.getAllProducts.map(ele=>{
+    if (!uniqueCategories.has(ele.category)) {
+      uniqueCategories.add(ele.category);
+      categoriesData.push(ele.category);
+  }
+  })
   if (loading) return <Spinner/>;
   if (error) return <SomeThingWentWrong/>;
 
