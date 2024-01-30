@@ -9,6 +9,13 @@ const GET_PRODUCT = gql`
       description
       productImage
       category
+      images{
+        productImage1
+            productImage2
+            productImage3
+            productImage4
+            productImage5
+      }
     }
   }
 `;
@@ -22,6 +29,13 @@ const GET_ALL_PRODUCTS = gql`
       description
       productImage
       category
+      images{
+        productImage1
+            productImage2
+            productImage3
+            productImage4
+            productImage5
+      }
     }
   }
 `;
@@ -64,7 +78,7 @@ const GET_ORDER_HISTORY = gql`
     }
   }
 `;
-const GET_USER=gql`
+const GET_USER = gql`
 query GetUser($userName:String!,$password:String!){
   getUser(userName:$userName,password:$password){
       userName
@@ -97,7 +111,7 @@ query GetUser($userName:String!,$password:String!){
   }
 }
 `;
-const GET_USER_ADDRESSES=gql`
+const GET_USER_ADDRESSES = gql`
 query GetUserAddresses($userId:ID!){
   getUserAddresses(userId:$userId){
       addressId
@@ -165,7 +179,7 @@ const ADD_USER = gql`
   }
 `;
 
-const DELETE_CART_ITEM=gql`
+const DELETE_CART_ITEM = gql`
 mutation DeleteCartitem($cartItemId:ID!){
   deleteCartItem(cartItemId:$cartItemId){
       cartItemId
@@ -184,7 +198,7 @@ mutation DeleteCartitem($cartItemId:ID!){
   }
 }
 `;
-const ADD_ADDRESS=gql`
+const ADD_ADDRESS = gql`
 mutation AddAddress($userId:ID!,$address:AddressInput!){
   addAddress(userId:$userId,address:$address){
       addressId
@@ -195,7 +209,7 @@ mutation AddAddress($userId:ID!,$address:AddressInput!){
   }
 }
 `;
-const CREATE_ORDER=gql`
+const CREATE_ORDER = gql`
 mutation CreateOrder($userId: Int!, $productId: Int!) {
   createOrder(order: {
       userId: $userId

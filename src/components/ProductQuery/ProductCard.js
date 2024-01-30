@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
 import { ADD_TO_CART } from '../../services/graphql';
 import { useMutation } from '@apollo/client';
+import { NavLink } from 'react-router-dom';
 
 const CardContainer = styled.div`
   border: 1px solid #ddd;
@@ -68,7 +69,7 @@ const ProductCard = ({ product }) => {
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = async () => {
-    const { cart,user } = state;
+    const { cart, user } = state;
 
     // Check if the product is already in the cart
     const isProductInCart = cart.some(item => item.product.productId === product.productId);
@@ -103,7 +104,11 @@ const ProductCard = ({ product }) => {
 
   return (
     <CardContainer>
-      <ProductImage src={product.productImage} alt={product.productName} />
+      <NavLink to={{
+        pathname: `/singleproduct/${product.productId}`
+      }}>
+        <ProductImage src={product.productImage} alt={product.productName} />
+      </NavLink>
       <ProductName>{product.productName}</ProductName>
       <ProductDescription>{product.description}</ProductDescription>
       <ProductPrice>₹{product.price}/-</ProductPrice>
