@@ -21,7 +21,7 @@ import Orders from './pages/Orders';
 import SingleProduct from './pages/SingleProduct';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8080/graphql',
+  uri: 'https://srinadhecommerce.up.railway.app/graphql',
   cache: new InMemoryCache(),
 });
 
