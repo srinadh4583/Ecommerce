@@ -2,12 +2,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const FiltersContainer = styled.div`
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 8px;
-`;
+// const FiltersContainer = styled.div`
+//   border: 1px solid #ddd;
+//   padding: 10px;
+//   margin: 10px;
+//   border-radius: 8px;
+// `;
 
 const FiltersHeader = styled.h3`
   display: flex;
