@@ -78,12 +78,12 @@ const PaymentSuccess = () => {
   };
   //let emptyArr=[];
   if (data) {
-    selectedProducts.map(selected=>{
+    selectedProducts.forEach(selected=>{
       let productId;
-      selected.map(ele=>{
+      selected.forEach(ele=>{
         productId=ele.productId
       })
-      cart.map(product=>{
+      cart.forEach(product=>{
         if(product.product.productId=== productId){  
           handleRemoveFromCart(product.cartItemId) 
         }

@@ -24,7 +24,7 @@ function Payment() {
         
         selectedProducts.forEach(async (ele) => {
           let productId;
-          ele.map(ele1=>{
+          ele.forEach(ele1=>{
             productId=ele1.productId;
           })
           if(productId&&user.userId){
@@ -36,6 +36,7 @@ function Payment() {
                 productId: productId
               }
             });
+            console.log(data);
             
           } catch (error) {
             console.error(`Error creating order for product ${ele}:`, error);
