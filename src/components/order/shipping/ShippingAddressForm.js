@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { useMutation,useQuery } from '@apollo/client'; 
 import styled, { keyframes } from 'styled-components';
