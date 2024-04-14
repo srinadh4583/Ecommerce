@@ -8,10 +8,19 @@ const NavigationContainer = styled.nav`
   list-style: none;
   padding: 0;
   margin: 0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const NavigationItem = styled.li`
   margin-right: 20px;
+
+  @media (max-width: 768px) {
+    margin: 10px 0;
+  }
 `;
 
 const NavigationLink = styled(NavLink)`
